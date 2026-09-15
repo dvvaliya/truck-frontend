@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, CalendarClock, Clock3, LoaderCircle, MapPin, Navigation } from "lucide-react";
+import { ArrowRight, Clock3, LoaderCircle, MapPin, Navigation } from "lucide-react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 
+import { DateTimePicker } from "@/components/date-time-picker";
 import { LocationAutocomplete } from "@/components/location-autocomplete";
 import { ApiError, createTrip } from "@/lib/api";
 import { toUtcMinute } from "@/lib/format";
@@ -100,19 +101,10 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
       />
 
       <div className="form-row">
-        <label>
-          <span>Departure</span>
-          <div className="input-shell">
-            <CalendarClock className="size-4" />
-            <input
-              required
-              type="datetime-local"
-              step="60"
-              value={form.departure_time}
-              onChange={(event) => updateField("departure_time", event.target.value)}
-            />
-          </div>
-        </label>
+        <DateTimePicker
+          value={form.departure_time}
+          onChange={(value) => updateField("departure_time", value)}
+        />
         <label>
           <span>Cycle used</span>
           <div className="input-shell">

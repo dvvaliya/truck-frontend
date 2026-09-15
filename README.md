@@ -40,7 +40,10 @@ src/
 ## Main interface
 
 - Trip inputs for current location, pickup, drop-off, departure, and cycle hours
+- Accessible custom date-time picker built with `@daypicker/react`
 - Interactive OpenStreetMap route rendered with React Leaflet
 - Trip distance, duration, cycle, and daily-log summary
 - Chronological driving, pickup, break, fuel, rest, and drop-off timeline
 - Responsive SVG daily-log sheets with print support
+
+`@daypicker/react` was selected because it provides TypeScript support, keyboard accessibility, single-date selection, and full styling control without forcing a predefined visual design. Time selection and timezone conversion remain handled by the application's Moment Timezone utilities.
