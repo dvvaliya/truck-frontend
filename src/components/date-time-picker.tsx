@@ -139,7 +139,7 @@ export const DateTimePicker = ({ value, onChange }: DateTimePickerProps) => {
         {isOpen && (
           <div
             ref={popoverRef}
-            className="fixed top-1/2 left-1/2 z-[1200] max-h-[calc(100vh-28px)] w-[min(350px,calc(100vw-28px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-field-border bg-white p-4 shadow-popover sm:absolute sm:top-[calc(100%+8px)] sm:left-0 sm:max-h-[min(540px,calc(100vh-32px))] sm:w-[min(350px,calc(100vw-72px))] sm:translate-x-0 sm:translate-y-0"
+            className="date-time-popover fixed top-1/2 left-1/2 z-[1200] max-h-[calc(100vh-28px)] w-[min(350px,calc(100vw-28px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-field-border bg-white p-4 shadow-popover sm:absolute sm:top-[calc(100%+8px)] sm:left-0 sm:max-h-[min(540px,calc(100vh-32px))] sm:w-[min(350px,calc(100vw-72px))] sm:translate-x-0 sm:translate-y-0"
             role="dialog"
             aria-label="Choose departure time"
           >

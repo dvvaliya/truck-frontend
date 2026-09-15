@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, Clock3, LoaderCircle, MapPin, Navigation } from "lucide-react";
+import { ArrowRight, LoaderCircle, MapPin, Navigation } from "lucide-react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 
+import { CycleHoursInput } from "@/components/cycle-hours-input";
 import { DateTimePicker } from "@/components/date-time-picker";
 import { LocationAutocomplete } from "@/components/location-autocomplete";
 import { ApiError, createTrip } from "@/lib/api";
@@ -113,25 +114,10 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
           value={form.departure_time}
           onChange={(value) => updateField("departure_time", value)}
         />
-        <label className="mt-4 block">
-          <span className="mb-2 block text-xs font-bold text-field-text">Cycle used</span>
-          <div className={inputShellClass}>
-            <Clock3 className="size-4" />
-            <input
-              required
-              type="number"
-              min="0"
-              max="70"
-              step="0.25"
-              className="w-full min-w-0 border-0 bg-transparent text-sm text-ink outline-none"
-              value={form.current_cycle_used_hours}
-              onChange={(event) =>
-                updateField("current_cycle_used_hours", event.target.value)
-              }
-            />
-            <small className="text-[11px] font-bold">hrs</small>
-          </div>
-        </label>
+        <CycleHoursInput
+          value={form.current_cycle_used_hours}
+          onChange={(value) => updateField("current_cycle_used_hours", value)}
+        />
       </div>
 
       <details className="mt-[18px] border-t border-line">

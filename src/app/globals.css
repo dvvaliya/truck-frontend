@@ -47,6 +47,10 @@ input {
 
 /* DayPicker exposes stable classes and CSS variables for custom themes. */
 .date-time-popover .rdp-root {
+  --rdp-accent-color: theme(colors.orange);
+  --rdp-accent-background-color: theme(colors.orange-soft);
+  --rdp-selected-border: 2px solid theme(colors.orange);
+  --rdp-today-color: theme(colors.orange);
   --rdp-day-height: 36px;
   --rdp-day-width: 36px;
   --rdp-day_button-height: 33px;
@@ -80,6 +84,10 @@ input {
 .date-time-popover .rdp-nav {
   right: 0;
   gap: 2px;
+}
+
+.date-time-popover .rdp-chevron {
+  @apply fill-orange;
 }
 
 .date-time-popover .rdp-button_previous,
