@@ -46,6 +46,7 @@ export type DailyLog = {
     cycle_end_minutes: number;
     remaining_cycle_minutes: number;
     restart_completed: boolean;
+    restart_in_progress: boolean;
   };
   segments: LogSegment[];
 };

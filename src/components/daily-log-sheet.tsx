@@ -197,8 +197,16 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         />
         <RecapValue
           label="34-hour restart"
-          value={log.cycle_recap.restart_completed ? "Completed" : "No"}
-          highlighted={log.cycle_recap.restart_completed}
+          value={
+            log.cycle_recap.restart_completed
+              ? "Completed"
+              : log.cycle_recap.restart_in_progress
+                ? "In progress"
+                : "No"
+          }
+          highlighted={
+            log.cycle_recap.restart_completed || log.cycle_recap.restart_in_progress
+          }
         />
       </div>
 
