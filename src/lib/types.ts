@@ -35,9 +35,18 @@ export type LogSegment = {
 export type DailyLog = {
   date: string;
   time_zone: string;
+  from_location: string;
+  to_location: string;
   total_miles: string;
   total_minutes: number;
   duty_totals_minutes: Record<DutyStatus, number>;
+  cycle_recap: {
+    cycle_start_minutes: number;
+    on_duty_today_minutes: number;
+    cycle_end_minutes: number;
+    remaining_cycle_minutes: number;
+    restart_completed: boolean;
+  };
   segments: LogSegment[];
 };
 
@@ -81,8 +90,12 @@ export type Trip = {
   co_driver_name: string;
   carrier_name: string;
   main_office_address: string;
+  home_terminal_address: string;
   vehicle_numbers: string;
   shipping_document_number: string;
+  dvir_manifest_number: string;
+  shipper_name: string;
+  commodity: string;
   current_cycle_used_hours: string;
   distance_miles: string | null;
   estimated_duration_minutes: number | null;
@@ -105,8 +118,12 @@ export type CreateTripInput = {
   co_driver_name: string;
   carrier_name: string;
   main_office_address: string;
+  home_terminal_address: string;
   vehicle_numbers: string;
   shipping_document_number: string;
+  dvir_manifest_number: string;
+  shipper_name: string;
+  commodity: string;
 };
 
 export type LocationSuggestion = {

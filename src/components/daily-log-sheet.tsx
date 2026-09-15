@@ -30,8 +30,18 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         <div className="flex items-center justify-between gap-4 font-mono text-[11px] text-meta max-sm:flex-wrap max-sm:items-start">
           <span>{formatLogDate(log.date, log.time_zone)}</span>
           <span>{log.time_zone}</span>
-          <strong className="rounded-lg bg-surface-soft px-2.5 py-2 text-forest">{Number(log.total_miles).toLocaleString()} mi</strong>
+          <strong className="rounded-lg bg-surface-soft px-3 py-2 text-forest">
+            <small className="mb-0.5 block text-[8px] font-extrabold uppercase tracking-wider text-muted">
+              Total miles driving today
+            </small>
+            <span className="text-sm">{Number(log.total_miles).toLocaleString()} mi</span>
+          </strong>
         </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-4 rounded-xl bg-surface-soft px-4 py-3 text-xs max-sm:mx-4 max-sm:grid-cols-1">
+        <LogIdentity label="From" value={log.from_location} />
+        <LogIdentity label="To" value={log.to_location} />
       </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-0 pt-3.5 pb-1 text-xs text-identity-text sm:grid-cols-3 max-sm:mx-4">
@@ -39,8 +49,14 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         <LogIdentity label="Co-driver" value={trip.co_driver_name} />
         <LogIdentity label="Carrier" value={trip.carrier_name} />
         <LogIdentity label="Main office" value={trip.main_office_address} />
+        <LogIdentity label="Home terminal" value={trip.home_terminal_address} />
         <LogIdentity label="Vehicle" value={trip.vehicle_numbers} />
         <LogIdentity label="Shipping document" value={trip.shipping_document_number} />
+        <LogIdentity label="DVIR / manifest" value={trip.dvir_manifest_number} />
+        <LogIdentity
+          label="Shipper / commodity"
+          value={[trip.shipper_name, trip.commodity].filter(Boolean).join(" · ")}
+        />
       </div>
 
       <div className="overflow-x-auto" aria-label={`Duty status graph for ${log.date}`}>
@@ -162,6 +178,30 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         </p>
       </div>
 
+      <div className="grid grid-cols-5 gap-3 border-t border-line px-4 py-3 text-[10px] max-md:grid-cols-2 max-sm:mx-4">
+        <RecapValue
+          label="Cycle at start"
+          value={`${formatHours(log.cycle_recap.cycle_start_minutes)} hrs`}
+        />
+        <RecapValue
+          label="On duty today"
+          value={`${formatHours(log.cycle_recap.on_duty_today_minutes)} hrs`}
+        />
+        <RecapValue
+          label="Cycle at end"
+          value={`${formatHours(log.cycle_recap.cycle_end_minutes)} hrs`}
+        />
+        <RecapValue
+          label="Hours available"
+          value={`${formatHours(log.cycle_recap.remaining_cycle_minutes)} hrs`}
+        />
+        <RecapValue
+          label="34-hour restart"
+          value={log.cycle_recap.restart_completed ? "Completed" : "No"}
+          highlighted={log.cycle_recap.restart_completed}
+        />
+      </div>
+
       <div className="mt-3 flex items-end justify-between gap-6 border-t border-line px-4 pt-3 text-[10px] text-meta max-sm:mx-4 max-sm:flex-col max-sm:items-start">
         <span>I certify these entries are true and correct.</span>
         <span className="min-w-52 border-b border-ink pb-1 text-right font-semibold text-ink max-sm:text-left">
@@ -178,5 +218,20 @@ const LogIdentity = ({ label, value }: { label: string; value: string }) => (
       {label}
     </small>
     {value || "Not provided"}
+  </span>
+);
+
+const RecapValue = ({
+  label,
+  value,
+  highlighted = false,
+}: {
+  label: string;
+  value: string;
+  highlighted?: boolean;
+}) => (
+  <span className={highlighted ? "rounded-lg bg-orange-soft p-2 text-orange" : "p-2 text-meta"}>
+    <small className="mb-1 block font-extrabold uppercase tracking-wider">{label}</small>
+    <strong className="text-xs text-ink">{value}</strong>
   </span>
 );

@@ -21,8 +21,12 @@ const initialForm: CreateTripInput = {
   co_driver_name: "",
   carrier_name: "",
   main_office_address: "",
+  home_terminal_address: "",
   vehicle_numbers: "",
   shipping_document_number: "",
+  dvir_manifest_number: "",
+  shipper_name: "",
+  commodity: "",
 };
 
 type TripFormProps = {
@@ -157,6 +161,11 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
             onChange={(value) => updateField("main_office_address", value)}
           />
           <TextInput
+            label="Home terminal"
+            value={form.home_terminal_address}
+            onChange={(value) => updateField("home_terminal_address", value)}
+          />
+          <TextInput
             label="Vehicle numbers"
             value={form.vehicle_numbers}
             onChange={(value) => updateField("vehicle_numbers", value)}
@@ -165,6 +174,21 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
             label="Shipping document"
             value={form.shipping_document_number}
             onChange={(value) => updateField("shipping_document_number", value)}
+          />
+          <TextInput
+            label="DVIR / manifest number"
+            value={form.dvir_manifest_number}
+            onChange={(value) => updateField("dvir_manifest_number", value)}
+          />
+          <TextInput
+            label="Shipper"
+            value={form.shipper_name}
+            onChange={(value) => updateField("shipper_name", value)}
+          />
+          <TextInput
+            label="Commodity"
+            value={form.commodity}
+            onChange={(value) => updateField("commodity", value)}
           />
         </div>
       </details>
