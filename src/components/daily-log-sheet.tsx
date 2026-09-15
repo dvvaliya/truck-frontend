@@ -1,5 +1,5 @@
 import type { DailyLog, DutyStatus, Trip } from "@/lib/types";
-import { formatHours } from "@/lib/format";
+import { formatHours, formatLogDate } from "@/lib/format";
 
 const rows: { key: DutyStatus; short: string; label: string }[] = [
   { key: "off_duty", short: "1", label: "Off Duty" },
@@ -28,7 +28,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
           <h3>Driver&apos;s Daily Log</h3>
         </div>
         <div className="log-meta">
-          <span>{log.date}</span>
+          <span>{formatLogDate(log.date, log.time_zone)}</span>
           <span>{log.time_zone}</span>
           <strong>{Number(log.total_miles).toLocaleString()} mi</strong>
         </div>

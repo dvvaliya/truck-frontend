@@ -57,7 +57,8 @@ export const TripTimeline = ({ events, timeZone }: { events: TripEvent[]; timeZo
                 <span>{formatEventDuration(event.duration_minutes)}</span>
               </div>
               <p className="event-time">
-                {formatTime(event.start_time, timeZone)} – {formatTime(event.end_time, timeZone)}
+                {formatTime(event.start_time, timeZone)} –{" "}
+                {formatTime(event.end_time, timeZone)}
               </p>
               <p className="event-location">
                 <MapPin className="size-3.5" />

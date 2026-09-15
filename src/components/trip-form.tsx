@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { LocationAutocomplete } from "@/components/location-autocomplete";
 import { ApiError, createTrip } from "@/lib/api";
+import { toUtcMinute } from "@/lib/format";
 import type { CreateTripInput, Trip } from "@/lib/types";
 
 const initialForm: CreateTripInput = {
@@ -40,8 +41,8 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
     setError("");
     setIsLoading(true);
 
-    const departure = new Date(form.departure_time);
-    if (Number.isNaN(departure.getTime())) {
+    const departureTime = toUtcMinute(form.departure_time);
+    if (!departureTime) {
       setError("Choose a valid departure date and time.");
       setIsLoading(false);
       return;
@@ -50,7 +51,7 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
     try {
       const trip = await createTrip({
         ...form,
-        departure_time: departure.toISOString().replace(/:\d{2}\.\d{3}Z$/, ":00Z"),
+        departure_time: departureTime,
       });
       onTripCreated(trip);
     } catch (requestError) {

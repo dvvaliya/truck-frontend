@@ -1,3 +1,5 @@
+import moment from "moment-timezone";
+
 export const formatDuration = (minutes: number | null) => {
   if (minutes === null) return "—";
 
@@ -14,15 +16,18 @@ export const formatEventDuration = (minutes: number) => {
   return remainder ? `${hours} hr ${remainder} min` : `${hours} hr`;
 };
 
-export const formatTime = (value: string, timeZone: string) =>
-  new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone,
-    timeZoneName: "short",
-  }).format(new Date(value));
-
 export const formatHours = (minutes: number) =>
   (minutes / 60).toFixed(2).replace(/\.00$/, "");
+
+export const formatTime = (value: string, timeZone: string) =>
+  moment(value).tz(timeZone).format("MMM D, h:mm A z");
+
+export const formatLogDate = (value: string, timeZone: string) =>
+  moment.tz(value, "YYYY-MM-DD", timeZone).format("MMM D, YYYY");
+
+export const toUtcMinute = (value: string) => {
+  const parsed = moment(value);
+  if (!parsed.isValid()) return null;
+
+  return parsed.utc().seconds(0).milliseconds(0).toISOString();
+};

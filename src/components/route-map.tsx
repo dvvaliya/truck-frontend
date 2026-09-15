@@ -1,7 +1,7 @@
 "use client";
 
 import type { LatLngBoundsExpression, LatLngTuple } from "leaflet";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   CircleMarker,
   MapContainer,
@@ -24,15 +24,21 @@ const FitRoute = ({ bounds }: { bounds: LatLngBoundsExpression }) => {
 };
 
 const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[] }) => {
-  const positions: LatLngTuple[] = route.geometry.coordinates.map(
-    ([longitude, latitude]) => [latitude, longitude],
+  const positions = useMemo<LatLngTuple[]>(
+    () =>
+      route.geometry.coordinates.map(([longitude, latitude]) => [latitude, longitude]),
+    [route.geometry.coordinates],
   );
   const waypoints = route.properties.waypoints ?? [];
-  const stops = events.filter(
-    (event) =>
-      ["break", "fuel", "rest"].includes(event.event_type) &&
-      event.latitude !== null &&
-      event.longitude !== null,
+  const stops = useMemo(
+    () =>
+      events.filter(
+        (event) =>
+          ["break", "fuel", "rest"].includes(event.event_type) &&
+          event.latitude !== null &&
+          event.longitude !== null,
+      ),
+    [events],
   );
 
   if (positions.length < 2) {
