@@ -34,6 +34,7 @@ const inputShellClass =
 
 export const TripForm = ({ onTripCreated }: TripFormProps) => {
   const [form, setForm] = useState(initialForm);
+  const [homeTerminalTimezone, setHomeTerminalTimezone] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,7 +47,13 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
     setError("");
     setIsLoading(true);
 
-    const departureTime = toUtcMinute(form.departure_time);
+    if (!homeTerminalTimezone) {
+      setError("Select the current location from the suggestions.");
+      setIsLoading(false);
+      return;
+    }
+
+    const departureTime = toUtcMinute(form.departure_time, homeTerminalTimezone);
     if (!departureTime) {
       setError("Choose a valid departure date and time.");
       setIsLoading(false);
@@ -90,7 +97,11 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
         label="Current location"
         placeholder="Chicago, IL"
         value={form.current_location}
-        onChange={(value) => updateField("current_location", value)}
+        onChange={(value) => {
+          updateField("current_location", value);
+          setHomeTerminalTimezone("");
+        }}
+        onSelect={(suggestion) => setHomeTerminalTimezone(suggestion.timezone)}
       />
       <LocationAutocomplete
         className="[&>svg]:text-gold"

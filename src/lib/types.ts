@@ -113,4 +113,5 @@ export type LocationSuggestion = {
   label: string;
   longitude: number;
   latitude: number;
+  timezone: string;
 };

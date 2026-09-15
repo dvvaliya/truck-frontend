@@ -25,8 +25,8 @@ export const formatTime = (value: string, timeZone: string) =>
 export const formatLogDate = (value: string, timeZone: string) =>
   moment.tz(value, "YYYY-MM-DD", timeZone).format("MMM D, YYYY");
 
-export const toUtcMinute = (value: string) => {
-  const parsed = moment(value);
+export const toUtcMinute = (value: string, timeZone: string) => {
+  const parsed = moment.tz(value, "YYYY-MM-DDTHH:mm", true, timeZone);
   if (!parsed.isValid()) return null;
 
   return parsed.utc().seconds(0).milliseconds(0).toISOString();

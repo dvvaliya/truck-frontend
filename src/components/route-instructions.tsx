@@ -16,7 +16,6 @@ export const RouteInstructions = ({ instructions }: { instructions: RouteInstruc
   return (
     <details
       className="mt-5 overflow-hidden rounded-[18px] border border-forest/10 bg-paper shadow-panel print:hidden"
-      open
     >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 marker:hidden">
         <div>

@@ -14,6 +14,7 @@ type LocationAutocompleteProps = {
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  onSelect?: (suggestion: LocationSuggestion) => void;
 };
 
 const inputShellClass =
@@ -26,6 +27,7 @@ export const LocationAutocomplete = ({
   placeholder,
   value,
   onChange,
+  onSelect,
 }: LocationAutocompleteProps) => {
   const listId = useId();
   const selectedValue = useRef("");
@@ -81,6 +83,7 @@ export const LocationAutocomplete = ({
   const selectSuggestion = (suggestion: LocationSuggestion) => {
     selectedValue.current = suggestion.label;
     onChange(suggestion.label);
+    onSelect?.(suggestion);
     setSuggestions([]);
     setIsOpen(false);
     setIsLoading(false);
