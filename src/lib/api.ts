@@ -1,4 +1,4 @@
-import type { CreateTripInput, Trip } from "./types";
+import type { CreateTripInput, LocationSuggestion, Trip } from "./types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
@@ -36,6 +36,23 @@ export async function createTrip(input: CreateTripInput): Promise<Trip> {
   }
 
   return body as Trip;
+}
+
+export async function searchLocations(
+  query: string,
+  signal?: AbortSignal,
+): Promise<LocationSuggestion[]> {
+  const response = await fetch(
+    `${API_BASE_URL}/locations/?q=${encodeURIComponent(query)}`,
+    { signal },
+  );
+  const body: unknown = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new ApiError(getErrorMessage(body) ?? "Location search failed.", body);
+  }
+
+  return (body as { results: LocationSuggestion[] }).results;
 }
 
 function getErrorMessage(body: unknown): string | null {

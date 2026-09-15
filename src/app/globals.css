@@ -83,6 +83,7 @@ button, input { font: inherit; }
 .step-number { color: #cfdbd6; font-family: var(--font-geist-mono); font-size: 30px; font-weight: 700; }
 .planner-card label { display: block; margin-top: 15px; }
 .planner-card label > span { display: block; margin-bottom: 7px; color: #53615d; font-size: 12px; font-weight: 750; }
+.autocomplete-field { position: relative; }
 
 .input-shell { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1px solid #d6ddda; border-radius: 12px; background: white; color: #70807b; transition: border-color 160ms ease, box-shadow 160ms ease; }
 .input-shell:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px rgb(226 95 45 / 12%); }
@@ -91,6 +92,15 @@ button, input { font: inherit; }
 .input-shell input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 14px; }
 .input-shell input::placeholder { color: #9ca8a4; }
 .input-shell small { font-size: 11px; font-weight: 750; }
+.autocomplete-spinner { flex: 0 0 auto; color: var(--orange); animation: spin 750ms linear infinite; }
+.suggestions { position: absolute; z-index: 1000; top: calc(100% + 6px); right: 0; left: 0; overflow: hidden; border: 1px solid #d4ddd9; border-radius: 12px; background: white; box-shadow: 0 18px 35px rgb(11 42 39 / 18%); }
+.suggestion { display: flex; width: 100%; align-items: flex-start; gap: 9px; padding: 11px 13px; border: 0; border-bottom: 1px solid #edf0ee; color: #35433f; background: white; font-size: 12px; line-height: 1.4; text-align: left; cursor: pointer; }
+.suggestion:last-child { border-bottom: 0; }
+.suggestion:hover, .suggestion.active { color: var(--forest); background: #eef3ef; }
+.suggestion svg { flex: 0 0 auto; margin-top: 1px; color: var(--orange); }
+.no-suggestions { margin: 0; padding: 13px; color: #78847f; font-size: 12px; }
+.animate-spin { animation: spin 750ms linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .form-row { display: grid; grid-template-columns: 1.55fr 0.8fr; gap: 12px; }
 .log-details { margin-top: 18px; border-top: 1px solid #e0e5e2; }
 .log-details summary { display: flex; justify-content: space-between; padding-top: 16px; color: var(--forest); font-size: 12px; font-weight: 800; cursor: pointer; list-style: none; }

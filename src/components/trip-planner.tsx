@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { DailyLogSheet } from "@/components/daily-log-sheet";
+import { LocationAutocomplete } from "@/components/location-autocomplete";
 import { TripTimeline } from "@/components/trip-timeline";
 import { ApiError, createTrip } from "@/lib/api";
 import type { CreateTripInput, RouteGeometry, Trip } from "@/lib/types";
@@ -135,14 +136,14 @@ export function TripPlanner() {
               <span className="step-number">01</span>
             </div>
 
-            <LocationInput
+            <LocationAutocomplete
               icon={<Navigation className="size-4" />}
               label="Current location"
               placeholder="Chicago, IL"
               value={form.current_location}
               onChange={(value) => setForm({ ...form, current_location: value })}
             />
-            <LocationInput
+            <LocationAutocomplete
               className="pickup-input"
               icon={<MapPin className="size-4" />}
               label="Pickup location"
@@ -150,7 +151,7 @@ export function TripPlanner() {
               value={form.pickup_location}
               onChange={(value) => setForm({ ...form, pickup_location: value })}
             />
-            <LocationInput
+            <LocationAutocomplete
               className="dropoff-input"
               icon={<MapPin className="size-4" />}
               label="Drop-off location"
@@ -231,37 +232,6 @@ export function TripPlanner() {
         {trip ? <TripResults trip={trip} /> : <EmptyPreview />}
       </div>
     </main>
-  );
-}
-
-function LocationInput({
-  className = "",
-  icon,
-  label,
-  placeholder,
-  value,
-  onChange,
-}: {
-  className?: string;
-  icon: React.ReactNode;
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label>
-      <span>{label}</span>
-      <div className={`input-shell ${className}`}>
-        {icon}
-        <input
-          required
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder={placeholder}
-        />
-      </div>
-    </label>
   );
 }
 

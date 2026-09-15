@@ -99,3 +99,9 @@ export type CreateTripInput = {
   vehicle_numbers: string;
   shipping_document_number: string;
 };
+
+export type LocationSuggestion = {
+  label: string;
+  longitude: number;
+  latitude: number;
+};
