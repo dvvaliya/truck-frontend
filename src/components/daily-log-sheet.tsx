@@ -21,29 +21,29 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
   const xForMinute = (minute: number) => plotStart + (minute / 1440) * plotWidth;
 
   return (
-    <article className="log-sheet">
-      <div className="log-header">
+    <article className="overflow-hidden rounded-2xl border border-forest/10 bg-paper p-6 shadow-panel print:min-h-[95vh] print:break-after-page print:border-0 print:shadow-none max-sm:px-0">
+      <div className="flex items-center justify-between gap-4 border-b border-line pb-4 max-sm:mx-4 max-sm:flex-col max-sm:items-start">
         <div>
-          <p className="eyebrow">Day {index + 1}</p>
-          <h3>Driver&apos;s Daily Log</h3>
+          <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[.18em] text-heading-muted">Day {index + 1}</p>
+          <h3 className="m-0 text-xl font-bold tracking-tight">Driver&apos;s Daily Log</h3>
         </div>
-        <div className="log-meta">
+        <div className="flex items-center justify-between gap-4 font-mono text-[11px] text-meta max-sm:flex-wrap max-sm:items-start">
           <span>{formatLogDate(log.date, log.time_zone)}</span>
           <span>{log.time_zone}</span>
-          <strong>{Number(log.total_miles).toLocaleString()} mi</strong>
+          <strong className="rounded-lg bg-surface-soft px-2.5 py-2 text-forest">{Number(log.total_miles).toLocaleString()} mi</strong>
         </div>
       </div>
 
-      <div className="log-identification">
-        <span><small>Driver</small>{trip.driver_name || "Not provided"}</span>
-        <span><small>Carrier</small>{trip.carrier_name || "Not provided"}</span>
-        <span><small>Vehicle</small>{trip.vehicle_numbers || "Not provided"}</span>
-        <span><small>Shipping document</small>{trip.shipping_document_number || "Not provided"}</span>
+      <div className="grid grid-cols-4 gap-3 px-0 pt-3.5 pb-1 text-xs text-identity-text max-sm:mx-4 max-sm:grid-cols-1">
+        <LogIdentity label="Driver" value={trip.driver_name} />
+        <LogIdentity label="Carrier" value={trip.carrier_name} />
+        <LogIdentity label="Vehicle" value={trip.vehicle_numbers} />
+        <LogIdentity label="Shipping document" value={trip.shipping_document_number} />
       </div>
 
-      <div className="log-scroll" aria-label={`Duty status graph for ${log.date}`}>
-        <svg viewBox="0 0 1180 238" role="img" className="log-grid">
-          <rect x="0" y="0" width="1180" height="238" rx="12" fill="#fffdf8" />
+      <div className="overflow-x-auto" aria-label={`Duty status graph for ${log.date}`}>
+        <svg viewBox="0 0 1180 238" role="img" className="block min-w-[920px]">
+          <rect className="fill-paper" x="0" y="0" width="1180" height="238" rx="12" />
           {Array.from({ length: 25 }, (_, hour) => {
             const x = plotStart + (hour / 24) * plotWidth;
             return (
@@ -53,7 +53,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
                   y1="42"
                   x2={x}
                   y2="201"
-                  stroke={hour % 6 === 0 ? "#93a39f" : "#d8dfdc"}
+                  className={hour % 6 === 0 ? "stroke-grid-strong" : "stroke-grid"}
                   strokeWidth={hour % 6 === 0 ? 1.2 : 0.7}
                 />
                 {hour < 24 && (
@@ -73,7 +73,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
                 width="26"
                 height="24"
                 rx="7"
-                fill="#173f3a"
+                className="fill-forest"
               />
               <text x="29" y={rowY[row.key]} textAnchor="middle" className="row-number">
                 {row.short}
@@ -93,7 +93,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
                 y1={rowY[row.key]}
                 x2={plotStart + plotWidth}
                 y2={rowY[row.key]}
-                stroke="#b7c2be"
+                className="stroke-sage"
               />
               <text x="1090" y={rowY[row.key]} className="total-label">
                 {formatHours(log.duty_totals_minutes[row.key])} hrs
@@ -108,7 +108,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
                       y1={rowY[row.key] + 8}
                       x2={x}
                       y2={rowY[row.key] + (tick % 4 === 0 ? 18 : 13)}
-                      stroke="#d8dfdc"
+                      className="stroke-grid"
                       strokeWidth="0.65"
                     />
                   );
@@ -131,7 +131,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
                     y1={previousY}
                     x2={startX}
                     y2={y}
-                    stroke="#e25f2d"
+                    className="stroke-orange"
                     strokeWidth="4"
                   />
                 )}
@@ -140,7 +140,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
                   y1={y}
                   x2={endX}
                   y2={y}
-                  stroke="#e25f2d"
+                  className="stroke-orange"
                   strokeLinecap="round"
                   strokeWidth="4"
                 />
@@ -150,9 +150,9 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         </svg>
       </div>
 
-      <div className="log-remarks">
-        <span>Remarks</span>
-        <p>
+      <div className="grid grid-cols-[100px_1fr] gap-4 border-t border-line px-4 py-3.5 text-[11px] leading-5 text-meta max-sm:mx-4 max-sm:grid-cols-1">
+        <span className="font-extrabold uppercase text-ink">Remarks</span>
+        <p className="m-0">
           {log.segments
             .filter((segment) => segment.event_type !== "off_duty")
             .map((segment) => `${segment.remarks} · ${segment.location}`)
@@ -162,3 +162,12 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
     </article>
   );
 };
+
+const LogIdentity = ({ label, value }: { label: string; value: string }) => (
+  <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+    <small className="mb-1 block text-[9px] font-extrabold uppercase tracking-wider text-muted">
+      {label}
+    </small>
+    {value || "Not provided"}
+  </span>
+);

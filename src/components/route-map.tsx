@@ -42,7 +42,11 @@ const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[]
   );
 
   if (positions.length < 2) {
-    return <div className="map-empty">Route geometry is unavailable.</div>;
+    return (
+      <div className="grid h-[470px] w-full place-items-center bg-map-surface text-muted">
+        Route geometry is unavailable.
+      </div>
+    );
   }
 
   const bounds: LatLngBoundsExpression = positions;
@@ -53,15 +57,14 @@ const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[]
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Polyline positions={positions} pathOptions={{ color: "#e25f2d", weight: 5 }} />
+      <Polyline positions={positions} pathOptions={{ className: "route-line", weight: 5 }} />
       {waypoints.map((waypoint, index) => (
         <CircleMarker
           key={`${waypoint.label}-${index}`}
           center={[waypoint.coordinates[1], waypoint.coordinates[0]]}
           radius={index === 1 ? 8 : 7}
           pathOptions={{
-            color: "#fffaf0",
-            fillColor: index === 1 ? "#e8aa2e" : "#173f3a",
+            className: index === 1 ? "map-marker-pickup" : "map-marker-primary",
             fillOpacity: 1,
             weight: 3,
           }}
@@ -79,8 +82,7 @@ const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[]
           center={[Number(stop.latitude), Number(stop.longitude)]}
           radius={6}
           pathOptions={{
-            color: "#fffaf0",
-            fillColor: stop.event_type === "fuel" ? "#e8aa2e" : "#e25f2d",
+            className: stop.event_type === "fuel" ? "map-marker-pickup" : "map-marker-stop",
             fillOpacity: 1,
             weight: 2,
           }}

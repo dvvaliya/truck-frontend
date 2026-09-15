@@ -37,7 +37,7 @@ export const DateTimePicker = ({ value, onChange }: DateTimePickerProps) => {
       if (!containerRef.current?.contains(target)) {
         setIsOpen(false);
         setOpenTimeMenu(null);
-      } else if (!target.closest(".time-select")) {
+      } else if (!target.closest("[data-time-select]")) {
         setOpenTimeMenu(null);
       }
     };
@@ -113,29 +113,33 @@ export const DateTimePicker = ({ value, onChange }: DateTimePickerProps) => {
   };
 
   return (
-    <div className="date-time-field">
-      <span>Departure</span>
-      <div ref={containerRef} className="date-time-container">
+    <div className="relative mt-4">
+      <span className="mb-2 block text-xs font-bold text-field-text">Departure</span>
+      <div ref={containerRef} className="relative">
         <button
-          className={isOpen ? "date-time-trigger open" : "date-time-trigger"}
+          className={`flex min-h-12 w-full items-center gap-2.5 rounded-xl border bg-white px-3.5 text-ink transition hover:border-orange ${
+            isOpen
+              ? "border-orange ring-3 ring-orange/10"
+              : "border-field-border"
+          }`}
           type="button"
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           onClick={togglePicker}
         >
-          <CalendarClock className="size-4" />
-          <span className={value ? "" : "placeholder"}>
+          <CalendarClock className="size-4 text-orange" />
+          <span className={`flex-1 overflow-hidden text-left text-[13px] text-ellipsis whitespace-nowrap ${value ? "" : "text-muted-light"}`}>
             {selectedMoment?.isValid()
               ? selectedMoment.format("MMM D, YYYY · h:mm A")
               : "Select departure"}
           </span>
-          <ChevronDown className="date-time-chevron size-4" />
+          <ChevronDown className={`size-4 text-muted transition ${isOpen ? "rotate-180" : ""}`} />
         </button>
 
         {isOpen && (
           <div
             ref={popoverRef}
-            className="date-time-popover"
+            className="fixed top-1/2 left-1/2 z-[1200] max-h-[calc(100vh-28px)] w-[min(350px,calc(100vw-28px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-field-border bg-white p-4 shadow-popover sm:absolute sm:top-[calc(100%+8px)] sm:left-0 sm:max-h-[min(540px,calc(100vh-32px))] sm:w-[min(350px,calc(100vw-72px))] sm:translate-x-0 sm:translate-y-0"
             role="dialog"
             aria-label="Choose departure time"
           >
@@ -150,12 +154,12 @@ export const DateTimePicker = ({ value, onChange }: DateTimePickerProps) => {
               showOutsideDays
             />
 
-            <div className="time-picker">
-              <div className="time-picker-heading">
+            <div className="mt-3 border-t border-line pt-3.5">
+              <div className="mb-2.5 flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-wider text-field-text">
                 <Clock3 className="size-4" />
                 Departure time
               </div>
-              <div className="time-selects">
+              <div className="grid grid-cols-[1fr_auto_1fr_1fr] items-center gap-2">
                 <TimeSelect
                   label="Hour"
                   options={hours}
@@ -164,7 +168,7 @@ export const DateTimePicker = ({ value, onChange }: DateTimePickerProps) => {
                   onToggle={() => setOpenTimeMenu((current) => current === "hour" ? null : "hour")}
                   onChange={(next) => updateTime("hour", next)}
                 />
-                <span className="time-separator">:</span>
+                <span className="font-black text-muted">:</span>
                 <TimeSelect
                   label="Minute"
                   options={minutes}
@@ -184,10 +188,10 @@ export const DateTimePicker = ({ value, onChange }: DateTimePickerProps) => {
               </div>
             </div>
 
-            <div className="date-time-actions">
-              <button type="button" onClick={chooseToday}>Next hour</button>
+            <div className="mt-3.5 flex items-center justify-between">
+              <button className="cursor-pointer rounded-lg border-0 bg-transparent px-2.5 py-2 text-[11px] font-extrabold text-forest hover:bg-surface-soft" type="button" onClick={chooseToday}>Next hour</button>
               <button
-                className="done-button"
+                className="cursor-pointer rounded-lg border-0 bg-forest px-4 py-2 text-[11px] font-extrabold text-white hover:bg-forest-deep"
                 type="button"
                 onClick={() => {
                   setOpenTimeMenu(null);
@@ -221,9 +225,11 @@ const TimeSelect = ({
   onToggle,
   onChange,
 }: TimeSelectProps) => (
-  <div className="time-select">
+  <div className="relative" data-time-select>
     <button
-      className={isOpen ? "time-select-trigger open" : "time-select-trigger"}
+      className={`flex h-10 w-full cursor-pointer items-center justify-between rounded-lg border bg-surface-input px-2.5 text-[13px] font-bold text-forest ${
+        isOpen ? "border-orange ring-2 ring-orange/10" : "border-field-border"
+      }`}
       type="button"
       aria-label={label}
       aria-haspopup="listbox"
@@ -231,13 +237,17 @@ const TimeSelect = ({
       onClick={onToggle}
     >
       <span>{value}</span>
-      <ChevronDown className="size-4" />
+      <ChevronDown className={`size-4 transition ${isOpen ? "rotate-180" : ""}`} />
     </button>
     {isOpen && (
-      <div className="time-options" role="listbox" aria-label={label}>
+      <div className="absolute right-0 bottom-[calc(100%+6px)] left-0 z-10 max-h-48 overflow-y-auto rounded-[10px] border border-field-border bg-white p-1 shadow-menu" role="listbox" aria-label={label}>
         {options.map((option) => (
           <button
-            className={option === value ? "time-option selected" : "time-option"}
+            className={`flex w-full cursor-pointer items-center justify-between rounded-md border-0 px-2 py-2 text-xs font-bold ${
+              option === value
+                ? "bg-surface-soft text-forest [&>svg]:text-orange"
+                : "bg-transparent text-field-text hover:bg-surface-soft hover:text-forest"
+            }`}
             key={option}
             type="button"
             role="option"

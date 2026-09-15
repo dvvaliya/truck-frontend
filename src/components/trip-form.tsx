@@ -28,6 +28,9 @@ type TripFormProps = {
   onTripCreated: (trip: Trip) => void;
 };
 
+const inputShellClass =
+  "flex min-h-12 items-center gap-2.5 rounded-xl border border-field-border bg-white px-3.5 text-muted transition focus-within:border-orange focus-within:ring-3 focus-within:ring-orange/10";
+
 export const TripForm = ({ onTripCreated }: TripFormProps) => {
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
@@ -67,13 +70,18 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
   };
 
   return (
-    <form className="planner-card" onSubmit={handleSubmit}>
-      <div className="form-heading">
+    <form
+      className="rounded-[22px] border border-forest/10 bg-paper p-6 text-ink shadow-panel-strong sm:p-8"
+      onSubmit={handleSubmit}
+    >
+      <div className="mb-6 flex items-center justify-between gap-4">
         <div>
-          <p className="eyebrow">New dispatch</p>
-          <h2>Build your trip plan</h2>
+          <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[.18em] text-orange">
+            New dispatch
+          </p>
+          <h2 className="m-0 text-2xl font-bold tracking-[-.04em]">Build your trip plan</h2>
         </div>
-        <span className="step-number">01</span>
+        <span className="font-mono text-3xl font-bold text-line">01</span>
       </div>
 
       <LocationAutocomplete
@@ -84,7 +92,7 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
         onChange={(value) => updateField("current_location", value)}
       />
       <LocationAutocomplete
-        className="pickup-input"
+        className="[&>svg]:text-gold"
         icon={<MapPin className="size-4" />}
         label="Pickup location"
         placeholder="Milwaukee, WI"
@@ -92,7 +100,7 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
         onChange={(value) => updateField("pickup_location", value)}
       />
       <LocationAutocomplete
-        className="dropoff-input"
+        className="[&>svg]:text-orange"
         icon={<MapPin className="size-4" />}
         label="Drop-off location"
         placeholder="Dallas, TX"
@@ -100,14 +108,14 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
         onChange={(value) => updateField("dropoff_location", value)}
       />
 
-      <div className="form-row">
+      <div className="grid gap-3 sm:grid-cols-[1.55fr_.8fr]">
         <DateTimePicker
           value={form.departure_time}
           onChange={(value) => updateField("departure_time", value)}
         />
-        <label>
-          <span>Cycle used</span>
-          <div className="input-shell">
+        <label className="mt-4 block">
+          <span className="mb-2 block text-xs font-bold text-field-text">Cycle used</span>
+          <div className={inputShellClass}>
             <Clock3 className="size-4" />
             <input
               required
@@ -115,21 +123,22 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
               min="0"
               max="70"
               step="0.25"
+              className="w-full min-w-0 border-0 bg-transparent text-sm text-ink outline-none"
               value={form.current_cycle_used_hours}
               onChange={(event) =>
                 updateField("current_cycle_used_hours", event.target.value)
               }
             />
-            <small>hrs</small>
+            <small className="text-[11px] font-bold">hrs</small>
           </div>
         </label>
       </div>
 
-      <details className="log-details">
-        <summary>
-          Log sheet details <span>Optional</span>
+      <details className="mt-[18px] border-t border-line">
+        <summary className="flex cursor-pointer list-none justify-between pt-4 text-xs font-extrabold text-forest marker:hidden">
+          Log sheet details <span className="font-semibold text-muted">Optional</span>
         </summary>
-        <div className="details-fields">
+        <div className="grid gap-x-3 sm:grid-cols-2">
           <TextInput
             label="Driver name"
             value={form.driver_name}
@@ -163,9 +172,17 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
         </div>
       </details>
 
-      {error && <p className="form-error">{error}</p>}
+      {error && (
+        <p className="mt-4 border-l-3 border-danger bg-danger-soft px-3 py-2.5 text-xs text-danger-text">
+          {error}
+        </p>
+      )}
 
-      <button className="primary-button" disabled={isLoading} type="submit">
+      <button
+        className="mt-6 inline-flex min-h-13 w-full items-center justify-center gap-2.5 rounded-xl border-0 bg-orange font-extrabold text-white transition hover:-translate-y-px hover:bg-orange-dark disabled:cursor-wait disabled:opacity-70"
+        disabled={isLoading}
+        type="submit"
+      >
         {isLoading ? (
           <>
             <LoaderCircle className="size-5 animate-spin" />
@@ -178,7 +195,9 @@ export const TripForm = ({ onTripCreated }: TripFormProps) => {
           </>
         )}
       </button>
-      <p className="form-note">No login required. Logs use home-terminal time.</p>
+      <p className="mt-3 text-center text-[11px] text-muted">
+        No login required. Logs use home-terminal time.
+      </p>
     </form>
   );
 };
@@ -190,10 +209,14 @@ type TextInputProps = {
 };
 
 const TextInput = ({ label, value, onChange }: TextInputProps) => (
-  <label>
-    <span>{label}</span>
-    <div className="input-shell">
-      <input value={value} onChange={(event) => onChange(event.target.value)} />
+  <label className="mt-4 block">
+    <span className="mb-2 block text-xs font-bold text-field-text">{label}</span>
+    <div className={inputShellClass}>
+      <input
+        className="w-full min-w-0 border-0 bg-transparent text-sm text-ink outline-none"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      />
     </div>
   </label>
 );

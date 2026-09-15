@@ -16,6 +16,9 @@ type LocationAutocompleteProps = {
   onChange: (value: string) => void;
 };
 
+const inputShellClass =
+  "flex min-h-12 items-center gap-2.5 rounded-xl border border-field-border bg-white px-3.5 text-muted transition focus-within:border-orange focus-within:ring-3 focus-within:ring-orange/10";
+
 export const LocationAutocomplete = ({
   className = "",
   icon,
@@ -103,11 +106,12 @@ export const LocationAutocomplete = ({
   };
 
   return (
-    <label className="autocomplete-field">
-      <span>{label}</span>
-      <div className={`input-shell ${className}`}>
+    <label className="relative mt-4 block">
+      <span className="mb-2 block text-xs font-bold text-field-text">{label}</span>
+      <div className={`${inputShellClass} ${className}`}>
         {icon}
         <input
+          className="w-full min-w-0 border-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted-light"
           required
           role="combobox"
           aria-autocomplete="list"
@@ -124,16 +128,22 @@ export const LocationAutocomplete = ({
           onBlur={() => window.setTimeout(() => setIsOpen(false), 120)}
           placeholder={placeholder}
         />
-        {isLoading && <LoaderCircle className="autocomplete-spinner size-4" />}
+        {isLoading && <LoaderCircle className="size-4 shrink-0 animate-spin text-orange" />}
       </div>
 
       {isOpen && (suggestions.length > 0 || (hasSearched && !isLoading)) && (
-        <div className="suggestions" id={listId} role="listbox">
+        <div
+          className="absolute inset-x-0 top-[calc(100%+6px)] z-50 overflow-hidden rounded-xl border border-field-border bg-white shadow-menu"
+          id={listId}
+          role="listbox"
+        >
           {suggestions.length > 0 ? (
             suggestions.map((suggestion, index) => (
               <button
                 id={`${listId}-option-${index}`}
-                className={index === activeIndex ? "suggestion active" : "suggestion"}
+                className={`flex w-full cursor-pointer items-start gap-2 border-0 border-b border-line-soft px-3 py-2.5 text-left text-xs leading-5 last:border-b-0 hover:bg-surface-soft hover:text-forest ${
+                  index === activeIndex ? "bg-surface-soft text-forest" : "bg-white text-ink"
+                }`}
                 key={`${suggestion.label}-${suggestion.longitude}-${suggestion.latitude}`}
                 type="button"
                 role="option"
@@ -141,12 +151,12 @@ export const LocationAutocomplete = ({
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => selectSuggestion(suggestion)}
               >
-                <MapPin className="size-4" />
+                <MapPin className="mt-0.5 size-4 shrink-0 text-orange" />
                 <span>{suggestion.label}</span>
               </button>
             ))
           ) : (
-            <p className="no-suggestions">No US locations found.</p>
+            <p className="m-0 p-3 text-xs text-muted">No US locations found.</p>
           )}
         </div>
       )}
