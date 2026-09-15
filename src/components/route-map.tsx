@@ -12,6 +12,7 @@ import {
 } from "react-leaflet";
 
 import type { RouteGeometry, TripEvent } from "@/lib/types";
+import { themeColors } from "../../tailwind.config";
 
 const FitRoute = ({ bounds }: { bounds: LatLngBoundsExpression }) => {
   const map = useMap();
@@ -57,14 +58,18 @@ const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[]
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Polyline positions={positions} pathOptions={{ className: "route-line", weight: 5 }} />
+      <Polyline
+        positions={positions}
+        pathOptions={{ color: themeColors.orange, weight: 5 }}
+      />
       {waypoints.map((waypoint, index) => (
         <CircleMarker
           key={`${waypoint.label}-${index}`}
           center={[waypoint.coordinates[1], waypoint.coordinates[0]]}
           radius={index === 1 ? 8 : 7}
           pathOptions={{
-            className: index === 1 ? "map-marker-pickup" : "map-marker-primary",
+            color: themeColors.paper,
+            fillColor: index === 1 ? themeColors.gold : themeColors.forest,
             fillOpacity: 1,
             weight: 3,
           }}
@@ -82,7 +87,9 @@ const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[]
           center={[Number(stop.latitude), Number(stop.longitude)]}
           radius={6}
           pathOptions={{
-            className: stop.event_type === "fuel" ? "map-marker-pickup" : "map-marker-stop",
+            color: themeColors.paper,
+            fillColor:
+              stop.event_type === "fuel" ? themeColors.gold : themeColors.orange,
             fillOpacity: 1,
             weight: 2,
           }}

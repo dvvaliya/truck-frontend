@@ -29,22 +29,6 @@ input {
   font-family: inherit;
 }
 
-.route-line {
-  @apply stroke-orange;
-}
-
-.map-marker-primary {
-  @apply fill-forest stroke-paper;
-}
-
-.map-marker-pickup {
-  @apply fill-gold stroke-paper;
-}
-
-.map-marker-stop {
-  @apply fill-orange stroke-paper;
-}
-
 /* DayPicker exposes stable classes and CSS variables for custom themes. */
 .date-time-popover .rdp-root {
   --rdp-accent-color: theme(colors.orange);
