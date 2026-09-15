@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import type { TripEvent } from "@/lib/types";
+import { formatEventDuration, formatTime } from "@/lib/format";
 
 const eventNames: Record<string, string> = {
   pre_trip: "Pre-trip inspection",
@@ -22,7 +23,7 @@ const eventNames: Record<string, string> = {
   post_trip: "Post-trip inspection",
 };
 
-function EventIcon({ type }: { type: string }) {
+const EventIcon = ({ type }: { type: string }) => {
   const className = "size-4";
   if (type === "pickup") return <Box className={className} />;
   if (type === "dropoff") return <Flag className={className} />;
@@ -31,27 +32,9 @@ function EventIcon({ type }: { type: string }) {
   if (type === "rest") return <BedDouble className={className} />;
   if (type === "driving") return <Navigation className={className} />;
   return <ShieldCheck className={className} />;
-}
+};
 
-function formatTime(value: string, timeZone: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone,
-    timeZoneName: "short",
-  }).format(new Date(value));
-}
-
-function formatDuration(minutes: number) {
-  const hours = Math.floor(minutes / 60);
-  const remainder = minutes % 60;
-  if (!hours) return `${remainder} min`;
-  return remainder ? `${hours} hr ${remainder} min` : `${hours} hr`;
-}
-
-export function TripTimeline({ events, timeZone }: { events: TripEvent[]; timeZone: string }) {
+export const TripTimeline = ({ events, timeZone }: { events: TripEvent[]; timeZone: string }) => {
   return (
     <section className="panel timeline-panel" aria-labelledby="timeline-title">
       <div className="section-heading">
@@ -71,7 +54,7 @@ export function TripTimeline({ events, timeZone }: { events: TripEvent[]; timeZo
             <div className="event-copy">
               <div className="event-title-row">
                 <h3>{eventNames[event.event_type] ?? event.event_type}</h3>
-                <span>{formatDuration(event.duration_minutes)}</span>
+                <span>{formatEventDuration(event.duration_minutes)}</span>
               </div>
               <p className="event-time">
                 {formatTime(event.start_time, timeZone)} – {formatTime(event.end_time, timeZone)}
@@ -86,4 +69,4 @@ export function TripTimeline({ events, timeZone }: { events: TripEvent[]; timeZo
       </ol>
     </section>
   );
-}
+};

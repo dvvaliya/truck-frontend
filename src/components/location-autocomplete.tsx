@@ -16,14 +16,14 @@ type LocationAutocompleteProps = {
   onChange: (value: string) => void;
 };
 
-export function LocationAutocomplete({
+export const LocationAutocomplete = ({
   className = "",
   icon,
   label,
   placeholder,
   value,
   onChange,
-}: LocationAutocompleteProps) {
+}: LocationAutocompleteProps) => {
   const listId = useId();
   const selectedValue = useRef("");
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
@@ -64,7 +64,7 @@ export function LocationAutocomplete({
     };
   }, [value]);
 
-  function handleChange(nextValue: string) {
+  const handleChange = (nextValue: string) => {
     selectedValue.current = "";
     onChange(nextValue);
     setIsOpen(nextValue.trim().length >= 2);
@@ -73,9 +73,9 @@ export function LocationAutocomplete({
       setSuggestions([]);
       setIsLoading(false);
     }
-  }
+  };
 
-  function selectSuggestion(suggestion: LocationSuggestion) {
+  const selectSuggestion = (suggestion: LocationSuggestion) => {
     selectedValue.current = suggestion.label;
     onChange(suggestion.label);
     setSuggestions([]);
@@ -83,9 +83,9 @@ export function LocationAutocomplete({
     setIsLoading(false);
     setHasSearched(false);
     setActiveIndex(-1);
-  }
+  };
 
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen || suggestions.length === 0) return;
 
     if (event.key === "ArrowDown") {
@@ -100,7 +100,7 @@ export function LocationAutocomplete({
     } else if (event.key === "Escape") {
       setIsOpen(false);
     }
-  }
+  };
 
   return (
     <label className="autocomplete-field">
@@ -152,4 +152,4 @@ export function LocationAutocomplete({
       )}
     </label>
   );
-}
+};

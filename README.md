@@ -21,6 +21,22 @@ pnpm exec tsc --noEmit
 pnpm build
 ```
 
+## Project structure
+
+```text
+src/
+├── app/                       # Page, layout, and global styles
+├── components/
+│   ├── trip-planner.tsx       # Coordinates form and result state
+│   ├── trip-form.tsx          # Inputs and trip API submission
+│   ├── trip-results.tsx       # Map, timeline, summary, and logs
+│   ├── location-autocomplete.tsx
+│   ├── route-map.tsx
+│   ├── trip-timeline.tsx
+│   └── daily-log-sheet.tsx
+└── lib/                       # API client, types, and formatters
+```
+
 ## Main interface
 
 - Trip inputs for current location, pickup, drop-off, departure, and cycle hours

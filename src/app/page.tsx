@@ -1,5 +1,5 @@
 import { TripPlanner } from "@/components/trip-planner";
 
-export default function Home() {
-  return <TripPlanner />;
-}
+const Home = () => <TripPlanner />;
+
+export default Home;

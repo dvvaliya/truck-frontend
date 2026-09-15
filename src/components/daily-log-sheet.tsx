@@ -1,4 +1,5 @@
 import type { DailyLog, DutyStatus, Trip } from "@/lib/types";
+import { formatHours } from "@/lib/format";
 
 const rows: { key: DutyStatus; short: string; label: string }[] = [
   { key: "off_duty", short: "1", label: "Off Duty" },
@@ -14,11 +15,7 @@ const rowY: Record<DutyStatus, number> = {
   on_duty: 181,
 };
 
-function formatHours(minutes: number) {
-  return (minutes / 60).toFixed(2).replace(/\.00$/, "");
-}
-
-export function DailyLogSheet({ log, index, trip }: { log: DailyLog; index: number; trip: Trip }) {
+export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: number; trip: Trip }) => {
   const plotStart = 220;
   const plotWidth = 820;
   const xForMinute = (minute: number) => plotStart + (minute / 1440) * plotWidth;
@@ -164,4 +161,4 @@ export function DailyLogSheet({ log, index, trip }: { log: DailyLog; index: numb
       </div>
     </article>
   );
-}
+};

@@ -1,97 +1,22 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import {
-  ArrowRight,
-  CalendarClock,
-  CheckCircle2,
-  Clock3,
-  LoaderCircle,
-  MapPin,
-  Navigation,
-  Printer,
-  Route,
-  ShieldCheck,
-} from "lucide-react";
+import { Navigation, ShieldCheck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { DailyLogSheet } from "@/components/daily-log-sheet";
-import { LocationAutocomplete } from "@/components/location-autocomplete";
-import { TripTimeline } from "@/components/trip-timeline";
-import { ApiError, createTrip } from "@/lib/api";
-import type { CreateTripInput, RouteGeometry, Trip } from "@/lib/types";
+import { TripForm } from "@/components/trip-form";
+import { EmptyPreview, TripResults } from "@/components/trip-results";
+import type { Trip } from "@/lib/types";
 
-const RouteMap = dynamic(() => import("@/components/route-map"), {
-  ssr: false,
-  loading: () => <div className="map-loading">Loading route map...</div>,
-});
-
-const initialForm = {
-  current_location: "",
-  pickup_location: "",
-  dropoff_location: "",
-  departure_time: "",
-  current_cycle_used_hours: "0",
-  driver_name: "",
-  co_driver_name: "",
-  carrier_name: "",
-  main_office_address: "",
-  vehicle_numbers: "",
-  shipping_document_number: "",
-};
-
-function formatDuration(minutes: number | null) {
-  if (minutes === null) return "—";
-  const hours = Math.floor(minutes / 60);
-  const remainder = minutes % 60;
-  return remainder ? `${hours}h ${remainder}m` : `${hours}h`;
-}
-
-export function TripPlanner() {
-  const [form, setForm] = useState(initialForm);
+export const TripPlanner = () => {
   const [trip, setTrip] = useState<Trip | null>(null);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (trip) {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      resultsRef.current?.focus({ preventScroll: true });
-    }
+    if (!trip) return;
+
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    resultsRef.current?.focus({ preventScroll: true });
   }, [trip]);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    const departure = new Date(form.departure_time);
-    if (Number.isNaN(departure.getTime())) {
-      setError("Choose a valid departure date and time.");
-      setIsLoading(false);
-      return;
-    }
-
-    const input: CreateTripInput = {
-      ...form,
-      departure_time: departure.toISOString().replace(/:\d{2}\.\d{3}Z$/, ":00Z"),
-    };
-
-    try {
-      const result = await createTrip(input);
-      setTrip(result);
-    } catch (requestError) {
-      setTrip(null);
-      setError(
-        requestError instanceof ApiError
-          ? requestError.message
-          : "Something went wrong while planning the trip.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   return (
     <main>
@@ -127,104 +52,7 @@ export function TripPlanner() {
             </div>
           </div>
 
-          <form className="planner-card" onSubmit={handleSubmit}>
-            <div className="form-heading">
-              <div>
-                <p className="eyebrow">New dispatch</p>
-                <h2>Build your trip plan</h2>
-              </div>
-              <span className="step-number">01</span>
-            </div>
-
-            <LocationAutocomplete
-              icon={<Navigation className="size-4" />}
-              label="Current location"
-              placeholder="Chicago, IL"
-              value={form.current_location}
-              onChange={(value) => setForm({ ...form, current_location: value })}
-            />
-            <LocationAutocomplete
-              className="pickup-input"
-              icon={<MapPin className="size-4" />}
-              label="Pickup location"
-              placeholder="Milwaukee, WI"
-              value={form.pickup_location}
-              onChange={(value) => setForm({ ...form, pickup_location: value })}
-            />
-            <LocationAutocomplete
-              className="dropoff-input"
-              icon={<MapPin className="size-4" />}
-              label="Drop-off location"
-              placeholder="Dallas, TX"
-              value={form.dropoff_location}
-              onChange={(value) => setForm({ ...form, dropoff_location: value })}
-            />
-
-            <div className="form-row">
-              <label>
-                <span>Departure</span>
-                <div className="input-shell">
-                  <CalendarClock className="size-4" />
-                  <input
-                    required
-                    type="datetime-local"
-                    step="60"
-                    value={form.departure_time}
-                    onChange={(event) =>
-                      setForm({ ...form, departure_time: event.target.value })
-                    }
-                  />
-                </div>
-              </label>
-              <label>
-                <span>Cycle used</span>
-                <div className="input-shell">
-                  <Clock3 className="size-4" />
-                  <input
-                    required
-                    type="number"
-                    min="0"
-                    max="70"
-                    step="0.25"
-                    value={form.current_cycle_used_hours}
-                    onChange={(event) =>
-                      setForm({ ...form, current_cycle_used_hours: event.target.value })
-                    }
-                  />
-                  <small>hrs</small>
-                </div>
-              </label>
-            </div>
-
-            <details className="log-details">
-              <summary>Log sheet details <span>Optional</span></summary>
-              <div className="details-fields">
-                <TextInput label="Driver name" value={form.driver_name} onChange={(value) => setForm({ ...form, driver_name: value })} />
-                <TextInput label="Co-driver" value={form.co_driver_name} onChange={(value) => setForm({ ...form, co_driver_name: value })} />
-                <TextInput label="Carrier" value={form.carrier_name} onChange={(value) => setForm({ ...form, carrier_name: value })} />
-                <TextInput label="Main office" value={form.main_office_address} onChange={(value) => setForm({ ...form, main_office_address: value })} />
-                <TextInput label="Vehicle numbers" value={form.vehicle_numbers} onChange={(value) => setForm({ ...form, vehicle_numbers: value })} />
-                <TextInput label="Shipping document" value={form.shipping_document_number} onChange={(value) => setForm({ ...form, shipping_document_number: value })} />
-              </div>
-            </details>
-
-            {error && <p className="form-error">{error}</p>}
-
-            <button className="primary-button" disabled={isLoading} type="submit">
-              {isLoading ? (
-                <>
-                  <LoaderCircle className="size-5 animate-spin" />
-                  Building legal route...
-                </>
-              ) : (
-                <>
-                  Generate trip plan
-                  <ArrowRight className="size-5" />
-                </>
-              )}
-            </button>
-            <p className="form-note">No login required. Times are shown in UTC.</p>
-          </form>
+          <TripForm onTripCreated={setTrip} />
         </div>
       </section>
 
@@ -233,111 +61,4 @@ export function TripPlanner() {
       </div>
     </main>
   );
-}
-
-function EmptyPreview() {
-  return (
-    <section className="empty-preview">
-      <div className="route-sketch" aria-hidden="true">
-        <span className="sketch-dot start-dot" />
-        <span className="sketch-line" />
-        <span className="sketch-dot pickup-dot" />
-        <span className="sketch-line second-line" />
-        <span className="sketch-dot end-dot" />
-      </div>
-      <p className="eyebrow">Ready when you are</p>
-      <h2>Your legal route will appear here</h2>
-      <p>Enter the trip details above to calculate every mile, stop, and duty change.</p>
-    </section>
-  );
-}
-
-function TextInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return (
-    <label>
-      <span>{label}</span>
-      <div className="input-shell">
-        <input value={value} onChange={(event) => onChange(event.target.value)} />
-      </div>
-    </label>
-  );
-}
-
-function TripResults({ trip }: { trip: Trip }) {
-  const route = trip.route_geometry as RouteGeometry;
-  const cycleRemaining = Math.max(0, 70 - Number(trip.current_cycle_used_hours));
-
-  return (
-    <div className="results-shell">
-      <section className="results-intro">
-        <div>
-          <p className="eyebrow">Plan complete</p>
-          <h2>{trip.pickup_location} to {trip.dropoff_location}</h2>
-        </div>
-        <button className="secondary-button" type="button" onClick={() => window.print()}>
-          <Printer className="size-4" />
-          Print logs
-        </button>
-      </section>
-
-      <section className="metric-grid" aria-label="Trip summary">
-        <Metric icon={<Route />} label="Route distance" value={`${Number(trip.distance_miles).toLocaleString()} mi`} />
-        <Metric icon={<Clock3 />} label="Drive estimate" value={formatDuration(trip.estimated_duration_minutes)} />
-        <Metric icon={<ShieldCheck />} label="Cycle available" value={`${cycleRemaining} hr`} />
-        <Metric icon={<CalendarClock />} label="Daily logs" value={String(trip.daily_logs.length)} />
-      </section>
-
-      <section className="panel map-panel" aria-labelledby="route-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Route overview</p>
-            <h2 id="route-title">Your planned run</h2>
-          </div>
-          <span className="route-status"><CheckCircle2 className="size-4" /> Compliant plan</span>
-        </div>
-        <RouteMap route={route} events={trip.events} />
-      </section>
-
-      <div className="details-grid">
-        <TripTimeline events={trip.events} timeZone={trip.home_terminal_timezone} />
-        <aside className="panel rules-panel">
-          <p className="eyebrow">Built into this plan</p>
-          <h2>Clock safeguards</h2>
-          <ul>
-            <li><span>01</span><p><strong>Driving limit</strong>Maximum 11 hours after a qualifying rest.</p></li>
-            <li><span>02</span><p><strong>Duty window</strong>No driving after the 14th consecutive hour.</p></li>
-            <li><span>03</span><p><strong>Required break</strong>30 minutes after 8 cumulative driving hours.</p></li>
-            <li><span>04</span><p><strong>Fuel planning</strong>A stop before each additional 1,000 miles.</p></li>
-          </ul>
-        </aside>
-      </div>
-
-      <section className="logs-section">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Record of duty status</p>
-            <h2>Daily log sheets</h2>
-          </div>
-          <p className="section-note">Each sheet totals 24 hours</p>
-        </div>
-        <div className="logs-list">
-          {trip.daily_logs.map((log, index) => (
-            <DailyLogSheet key={log.date} log={log} index={index} trip={trip} />
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function Metric({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <article className="metric-card">
-      <span className="metric-icon">{icon}</span>
-      <div>
-        <p>{label}</p>
-        <strong>{value}</strong>
-      </div>
-    </article>
-  );
-}
+};

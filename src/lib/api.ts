@@ -13,7 +13,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function createTrip(input: CreateTripInput): Promise<Trip> {
+export const createTrip = async (input: CreateTripInput): Promise<Trip> => {
   let response: Response;
 
   try {
@@ -36,12 +36,12 @@ export async function createTrip(input: CreateTripInput): Promise<Trip> {
   }
 
   return body as Trip;
-}
+};
 
-export async function searchLocations(
+export const searchLocations = async (
   query: string,
   signal?: AbortSignal,
-): Promise<LocationSuggestion[]> {
+): Promise<LocationSuggestion[]> => {
   const response = await fetch(
     `${API_BASE_URL}/locations/?q=${encodeURIComponent(query)}`,
     { signal },
@@ -53,9 +53,9 @@ export async function searchLocations(
   }
 
   return (body as { results: LocationSuggestion[] }).results;
-}
+};
 
-function getErrorMessage(body: unknown): string | null {
+const getErrorMessage = (body: unknown): string | null => {
   if (!body || typeof body !== "object") return null;
 
   const details = body as Record<string, unknown>;
@@ -67,4 +67,4 @@ function getErrorMessage(body: unknown): string | null {
   }
 
   return null;
-}
+};

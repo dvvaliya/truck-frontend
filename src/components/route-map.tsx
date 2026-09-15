@@ -13,7 +13,7 @@ import {
 
 import type { RouteGeometry, TripEvent } from "@/lib/types";
 
-function FitRoute({ bounds }: { bounds: LatLngBoundsExpression }) {
+const FitRoute = ({ bounds }: { bounds: LatLngBoundsExpression }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -21,9 +21,9 @@ function FitRoute({ bounds }: { bounds: LatLngBoundsExpression }) {
   }, [bounds, map]);
 
   return null;
-}
+};
 
-export default function RouteMap({ route, events }: { route: RouteGeometry; events: TripEvent[] }) {
+const RouteMap = ({ route, events }: { route: RouteGeometry; events: TripEvent[] }) => {
   const positions: LatLngTuple[] = route.geometry.coordinates.map(
     ([longitude, latitude]) => [latitude, longitude],
   );
@@ -89,4 +89,6 @@ export default function RouteMap({ route, events }: { route: RouteGeometry; even
       <FitRoute bounds={bounds} />
     </MapContainer>
   );
-}
+};
+
+export default RouteMap;
