@@ -15,6 +15,7 @@
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--cream); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
 button, input { font: inherit; }
+.results-anchor:focus { outline: none; }
 
 .hero-shell {
   position: relative;
@@ -91,6 +92,11 @@ button, input { font: inherit; }
 .input-shell input::placeholder { color: #9ca8a4; }
 .input-shell small { font-size: 11px; font-weight: 750; }
 .form-row { display: grid; grid-template-columns: 1.55fr 0.8fr; gap: 12px; }
+.log-details { margin-top: 18px; border-top: 1px solid #e0e5e2; }
+.log-details summary { display: flex; justify-content: space-between; padding-top: 16px; color: var(--forest); font-size: 12px; font-weight: 800; cursor: pointer; list-style: none; }
+.log-details summary::-webkit-details-marker { display: none; }
+.log-details summary span { color: #929e99; font-weight: 600; }
+.details-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
 
 .primary-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 0; border-radius: 12px; font-weight: 800; cursor: pointer; transition: transform 160ms ease, background 160ms ease, opacity 160ms ease; }
 .primary-button { width: 100%; min-height: 52px; margin-top: 22px; color: white; background: var(--orange); }
@@ -164,6 +170,9 @@ button, input { font: inherit; }
 .log-header h3 { margin: 0; font-size: 21px; letter-spacing: -0.03em; }
 .log-meta { color: #687671; font-family: var(--font-geist-mono); font-size: 11px; }
 .log-meta strong { padding: 7px 10px; border-radius: 8px; color: var(--forest); background: #edf2ee; }
+.log-identification { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 14px 0 4px; color: #26332f; font-size: 12px; }
+.log-identification span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-identification small { display: block; margin-bottom: 3px; color: #84918d; font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .log-scroll { overflow-x: auto; }
 .log-grid { display: block; min-width: 920px; }
 .hour-label, .total-label, .row-label, .row-number { font-family: var(--font-geist-mono); font-size: 9px; fill: #63716d; }
@@ -190,7 +199,7 @@ button, input { font: inherit; }
   .hero-description { font-size: 16px; }
   .hero-facts { gap: 14px; }
   .planner-card { padding: 22px; }
-  .form-row, .metric-grid { grid-template-columns: 1fr; }
+  .form-row, .metric-grid, .details-fields, .log-identification { grid-template-columns: 1fr; }
   .empty-preview, .results-shell { width: min(100% - 28px, 1220px); }
   .empty-preview { padding: 70px 10px 90px; }
   .results-shell { padding-top: 48px; }

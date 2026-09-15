@@ -1,4 +1,4 @@
-import type { DailyLog, DutyStatus } from "@/lib/types";
+import type { DailyLog, DutyStatus, Trip } from "@/lib/types";
 
 const rows: { key: DutyStatus; short: string; label: string }[] = [
   { key: "off_duty", short: "1", label: "Off Duty" },
@@ -18,9 +18,9 @@ function formatHours(minutes: number) {
   return (minutes / 60).toFixed(2).replace(/\.00$/, "");
 }
 
-export function DailyLogSheet({ log, index }: { log: DailyLog; index: number }) {
-  const plotStart = 154;
-  const plotWidth = 912;
+export function DailyLogSheet({ log, index, trip }: { log: DailyLog; index: number; trip: Trip }) {
+  const plotStart = 220;
+  const plotWidth = 820;
   const xForMinute = (minute: number) => plotStart + (minute / 1440) * plotWidth;
 
   return (
@@ -35,6 +35,13 @@ export function DailyLogSheet({ log, index }: { log: DailyLog; index: number }) 
           <span>{log.time_zone}</span>
           <strong>{Number(log.total_miles).toLocaleString()} mi</strong>
         </div>
+      </div>
+
+      <div className="log-identification">
+        <span><small>Driver</small>{trip.driver_name || "Not provided"}</span>
+        <span><small>Carrier</small>{trip.carrier_name || "Not provided"}</span>
+        <span><small>Vehicle</small>{trip.vehicle_numbers || "Not provided"}</span>
+        <span><small>Shipping document</small>{trip.shipping_document_number || "Not provided"}</span>
       </div>
 
       <div className="log-scroll" aria-label={`Duty status graph for ${log.date}`}>
@@ -74,9 +81,16 @@ export function DailyLogSheet({ log, index }: { log: DailyLog; index: number }) 
               <text x="29" y={rowY[row.key]} textAnchor="middle" className="row-number">
                 {row.short}
               </text>
-              <text x="50" y={rowY[row.key]} className="row-label">
-                {row.label}
-              </text>
+              {row.key === "on_duty" ? (
+                <text x="50" y={rowY[row.key] - 5} className="row-label">
+                  <tspan x="50">On Duty</tspan>
+                  <tspan x="50" dy="12">(Not Driving)</tspan>
+                </text>
+              ) : (
+                <text x="50" y={rowY[row.key]} className="row-label">
+                  {row.label}
+                </text>
+              )}
               <line
                 x1={plotStart}
                 y1={rowY[row.key]}

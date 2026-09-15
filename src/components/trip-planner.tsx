@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   CalendarClock,
@@ -31,6 +31,12 @@ const initialForm = {
   dropoff_location: "",
   departure_time: "",
   current_cycle_used_hours: "0",
+  driver_name: "",
+  co_driver_name: "",
+  carrier_name: "",
+  main_office_address: "",
+  vehicle_numbers: "",
+  shipping_document_number: "",
 };
 
 function formatDuration(minutes: number | null) {
@@ -45,6 +51,14 @@ export function TripPlanner() {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (trip) {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      resultsRef.current?.focus({ preventScroll: true });
+    }
+  }, [trip]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -181,6 +195,18 @@ export function TripPlanner() {
               </label>
             </div>
 
+            <details className="log-details">
+              <summary>Log sheet details <span>Optional</span></summary>
+              <div className="details-fields">
+                <TextInput label="Driver name" value={form.driver_name} onChange={(value) => setForm({ ...form, driver_name: value })} />
+                <TextInput label="Co-driver" value={form.co_driver_name} onChange={(value) => setForm({ ...form, co_driver_name: value })} />
+                <TextInput label="Carrier" value={form.carrier_name} onChange={(value) => setForm({ ...form, carrier_name: value })} />
+                <TextInput label="Main office" value={form.main_office_address} onChange={(value) => setForm({ ...form, main_office_address: value })} />
+                <TextInput label="Vehicle numbers" value={form.vehicle_numbers} onChange={(value) => setForm({ ...form, vehicle_numbers: value })} />
+                <TextInput label="Shipping document" value={form.shipping_document_number} onChange={(value) => setForm({ ...form, shipping_document_number: value })} />
+              </div>
+            </details>
+
             {error && <p className="form-error">{error}</p>}
 
             <button className="primary-button" disabled={isLoading} type="submit">
@@ -201,7 +227,9 @@ export function TripPlanner() {
         </div>
       </section>
 
-      {trip ? <TripResults trip={trip} /> : <EmptyPreview />}
+      <div ref={resultsRef} tabIndex={-1} className="results-anchor">
+        {trip ? <TripResults trip={trip} /> : <EmptyPreview />}
+      </div>
     </main>
   );
 }
@@ -254,6 +282,17 @@ function EmptyPreview() {
   );
 }
 
+function TextInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label>
+      <span>{label}</span>
+      <div className="input-shell">
+        <input value={value} onChange={(event) => onChange(event.target.value)} />
+      </div>
+    </label>
+  );
+}
+
 function TripResults({ trip }: { trip: Trip }) {
   const route = trip.route_geometry as RouteGeometry;
   const cycleRemaining = Math.max(0, 70 - Number(trip.current_cycle_used_hours));
@@ -286,11 +325,11 @@ function TripResults({ trip }: { trip: Trip }) {
           </div>
           <span className="route-status"><CheckCircle2 className="size-4" /> Compliant plan</span>
         </div>
-        <RouteMap route={route} />
+        <RouteMap route={route} events={trip.events} />
       </section>
 
       <div className="details-grid">
-        <TripTimeline events={trip.events} />
+        <TripTimeline events={trip.events} timeZone={trip.home_terminal_timezone} />
         <aside className="panel rules-panel">
           <p className="eyebrow">Built into this plan</p>
           <h2>Clock safeguards</h2>
@@ -313,7 +352,7 @@ function TripResults({ trip }: { trip: Trip }) {
         </div>
         <div className="logs-list">
           {trip.daily_logs.map((log, index) => (
-            <DailyLogSheet key={log.date} log={log} index={index} />
+            <DailyLogSheet key={log.date} log={log} index={index} trip={trip} />
           ))}
         </div>
       </section>

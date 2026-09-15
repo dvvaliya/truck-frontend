@@ -33,13 +33,13 @@ function EventIcon({ type }: { type: string }) {
   return <ShieldCheck className={className} />;
 }
 
-function formatTime(value: string) {
+function formatTime(value: string, timeZone: string) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    timeZone: "UTC",
+    timeZone,
     timeZoneName: "short",
   }).format(new Date(value));
 }
@@ -51,7 +51,7 @@ function formatDuration(minutes: number) {
   return remainder ? `${hours} hr ${remainder} min` : `${hours} hr`;
 }
 
-export function TripTimeline({ events }: { events: TripEvent[] }) {
+export function TripTimeline({ events, timeZone }: { events: TripEvent[]; timeZone: string }) {
   return (
     <section className="panel timeline-panel" aria-labelledby="timeline-title">
       <div className="section-heading">
@@ -74,7 +74,7 @@ export function TripTimeline({ events }: { events: TripEvent[] }) {
                 <span>{formatDuration(event.duration_minutes)}</span>
               </div>
               <p className="event-time">
-                {formatTime(event.start_time)} – {formatTime(event.end_time)}
+                {formatTime(event.start_time, timeZone)} – {formatTime(event.end_time, timeZone)}
               </p>
               <p className="event-location">
                 <MapPin className="size-3.5" />

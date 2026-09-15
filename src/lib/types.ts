@@ -67,6 +67,13 @@ export type Trip = {
   pickup_location: string;
   dropoff_location: string;
   departure_time: string;
+  home_terminal_timezone: string;
+  driver_name: string;
+  co_driver_name: string;
+  carrier_name: string;
+  main_office_address: string;
+  vehicle_numbers: string;
+  shipping_document_number: string;
   current_cycle_used_hours: string;
   distance_miles: string | null;
   estimated_duration_minutes: number | null;
@@ -85,4 +92,10 @@ export type CreateTripInput = {
   dropoff_location: string;
   departure_time: string;
   current_cycle_used_hours: string;
+  driver_name: string;
+  co_driver_name: string;
+  carrier_name: string;
+  main_office_address: string;
+  vehicle_numbers: string;
+  shipping_document_number: string;
 };

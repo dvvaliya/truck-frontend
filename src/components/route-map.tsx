@@ -11,7 +11,7 @@ import {
   useMap,
 } from "react-leaflet";
 
-import type { RouteGeometry } from "@/lib/types";
+import type { RouteGeometry, TripEvent } from "@/lib/types";
 
 function FitRoute({ bounds }: { bounds: LatLngBoundsExpression }) {
   const map = useMap();
@@ -23,11 +23,17 @@ function FitRoute({ bounds }: { bounds: LatLngBoundsExpression }) {
   return null;
 }
 
-export default function RouteMap({ route }: { route: RouteGeometry }) {
+export default function RouteMap({ route, events }: { route: RouteGeometry; events: TripEvent[] }) {
   const positions: LatLngTuple[] = route.geometry.coordinates.map(
     ([longitude, latitude]) => [latitude, longitude],
   );
   const waypoints = route.properties.waypoints ?? [];
+  const stops = events.filter(
+    (event) =>
+      ["break", "fuel", "rest"].includes(event.event_type) &&
+      event.latitude !== null &&
+      event.longitude !== null,
+  );
 
   if (positions.length < 2) {
     return <div className="map-empty">Route geometry is unavailable.</div>;
@@ -58,6 +64,25 @@ export default function RouteMap({ route }: { route: RouteGeometry }) {
             <strong>{["Start", "Pickup", "Drop-off"][index]}</strong>
             <br />
             {waypoint.label}
+          </Popup>
+        </CircleMarker>
+      ))}
+      {stops.map((stop) => (
+        <CircleMarker
+          key={stop.id}
+          center={[Number(stop.latitude), Number(stop.longitude)]}
+          radius={6}
+          pathOptions={{
+            color: "#fffaf0",
+            fillColor: stop.event_type === "fuel" ? "#e8aa2e" : "#e25f2d",
+            fillOpacity: 1,
+            weight: 2,
+          }}
+        >
+          <Popup>
+            <strong>{stop.remarks}</strong>
+            <br />
+            {stop.location}
           </Popup>
         </CircleMarker>
       ))}
