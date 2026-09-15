@@ -34,9 +34,11 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 px-0 pt-3.5 pb-1 text-xs text-identity-text max-sm:mx-4 max-sm:grid-cols-1">
+      <div className="grid grid-cols-3 gap-3 px-0 pt-3.5 pb-1 text-xs text-identity-text max-sm:mx-4 max-sm:grid-cols-1">
         <LogIdentity label="Driver" value={trip.driver_name} />
+        <LogIdentity label="Co-driver" value={trip.co_driver_name} />
         <LogIdentity label="Carrier" value={trip.carrier_name} />
+        <LogIdentity label="Main office" value={trip.main_office_address} />
         <LogIdentity label="Vehicle" value={trip.vehicle_numbers} />
         <LogIdentity label="Shipping document" value={trip.shipping_document_number} />
       </div>
@@ -158,6 +160,13 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
             .map((segment) => `${segment.remarks} · ${segment.location}`)
             .join("  /  ")}
         </p>
+      </div>
+
+      <div className="mt-3 flex items-end justify-between gap-6 border-t border-line px-4 pt-3 text-[10px] text-meta max-sm:mx-4 max-sm:flex-col max-sm:items-start">
+        <span>I certify these entries are true and correct.</span>
+        <span className="min-w-52 border-b border-ink pb-1 text-right font-semibold text-ink max-sm:text-left">
+          {trip.driver_name || "Driver signature"}
+        </span>
       </div>
     </article>
   );

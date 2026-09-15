@@ -5,6 +5,7 @@ import { CalendarClock, CheckCircle2, Clock3, Printer, Route, ShieldCheck } from
 import type { ReactNode } from "react";
 
 import { DailyLogSheet } from "@/components/daily-log-sheet";
+import { RouteInstructions } from "@/components/route-instructions";
 import { TripTimeline } from "@/components/trip-timeline";
 import { formatDuration } from "@/lib/format";
 import type { RouteGeometry, Trip } from "@/lib/types";
@@ -85,6 +86,8 @@ export const TripResults = ({ trip }: { trip: Trip }) => {
         </div>
         <RouteMap route={route} events={trip.events} />
       </section>
+
+      <RouteInstructions instructions={route.properties.instructions ?? []} />
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,.55fr)] print:hidden">
         <TripTimeline events={trip.events} timeZone={trip.home_terminal_timezone} />

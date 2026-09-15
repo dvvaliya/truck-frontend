@@ -58,6 +58,15 @@ export type RouteGeometry = {
       distance_miles: string;
       duration_minutes: number;
     }[];
+    instructions?: {
+      sequence: number;
+      leg: number;
+      instruction: string;
+      road_name: string;
+      distance_miles: string;
+      duration_minutes: number;
+      coordinates: [number, number];
+    }[];
   };
 };
 
