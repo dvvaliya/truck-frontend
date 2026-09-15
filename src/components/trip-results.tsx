@@ -94,7 +94,7 @@ export const TripResults = ({ trip }: { trip: Trip }) => {
         <ClockSafeguards />
       </div>
 
-      <section className="mt-16">
+      <section className="mt-16 print:mt-0">
         <div className="flex items-center justify-between gap-4 py-5 print:hidden">
           <div>
             <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[.18em] text-heading-muted">Record of duty status</p>
@@ -102,7 +102,7 @@ export const TripResults = ({ trip }: { trip: Trip }) => {
           </div>
           <p className="text-sm text-muted">Each sheet totals 24 hours</p>
         </div>
-        <div className="grid gap-5">
+        <div className="grid gap-5 print:block">
           {trip.daily_logs.map((log, index) => (
             <DailyLogSheet key={log.date} log={log} index={index} trip={trip} />
           ))}

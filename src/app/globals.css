@@ -166,3 +166,24 @@ input {
     height: 360px;
   }
 }
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 8mm;
+  }
+
+  .print-log-sheet {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    break-inside: avoid;
+    break-after: page;
+  }
+
+  .print-log-sheet:last-child {
+    break-after: auto;
+  }
+}

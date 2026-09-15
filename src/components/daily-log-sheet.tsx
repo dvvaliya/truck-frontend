@@ -21,7 +21,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
   const xForMinute = (minute: number) => plotStart + (minute / 1440) * plotWidth;
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-forest/10 bg-paper p-6 shadow-panel print:min-h-[95vh] print:break-after-page print:border-0 print:shadow-none max-sm:px-0">
+    <article className="print-log-sheet overflow-hidden rounded-2xl border border-forest/10 bg-paper p-6 shadow-panel max-sm:px-0">
       <div className="flex items-center justify-between gap-4 border-b border-line pb-4 max-sm:mx-4 max-sm:flex-col max-sm:items-start">
         <div>
           <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[.18em] text-heading-muted">Day {index + 1}</p>
@@ -34,7 +34,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 px-0 pt-3.5 pb-1 text-xs text-identity-text max-sm:mx-4 max-sm:grid-cols-1">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-0 pt-3.5 pb-1 text-xs text-identity-text sm:grid-cols-3 max-sm:mx-4">
         <LogIdentity label="Driver" value={trip.driver_name} />
         <LogIdentity label="Co-driver" value={trip.co_driver_name} />
         <LogIdentity label="Carrier" value={trip.carrier_name} />
@@ -173,7 +173,7 @@ export const DailyLogSheet = ({ log, index, trip }: { log: DailyLog; index: numb
 };
 
 const LogIdentity = ({ label, value }: { label: string; value: string }) => (
-  <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+  <span className="min-w-0 break-words sm:overflow-hidden sm:text-ellipsis sm:whitespace-nowrap">
     <small className="mb-1 block text-[9px] font-extrabold uppercase tracking-wider text-muted">
       {label}
     </small>
